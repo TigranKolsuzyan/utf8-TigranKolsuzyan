@@ -1,0 +1,51 @@
+This directory contains a set of sth test cases.
+  (https://github.com/smf-steve/sth)
+
+These test cases are evaluated via an automated process 
+  that is initiated by a `make` recipe, e.g., `make test_java`, 
+  or via the following command line.
+
+  $ cd {task}
+  $ STH_DRIVER=java_subroutine sth_validate ../test_cases 
+
+
+# The following environment variables can be defined within
+# a file with an extension of `.sth_case`. All such files can
+# be placed into a single directory, for example: ../test_cases.
+#
+#
+# | VARIABLE    | Description                        |
+# |-------------|------------------------------------|
+# | DRIVER      | The default driver program         |
+# | OPTIONS     | The options passed to ${DRIVER}    |
+#
+# | ENTRY       | The entry point to start testing   |
+# | ARGS        | The arguments passed to ${ENTRY}   |
+# | EXIT_STATUS | The expected exit value            |
+#
+# | INPUT       | The provided input (stdin)         |
+# | OUTPUT      | The expected output (stdout)       |
+#
+# Notes:
+#    - Both ENTRY and EXIT_STATUS must defined (and may not be the empty string)
+#    - the value of INPUT can either be a string or a filename
+#    - the value of OUTPUT can either be a string or a filename
+#
+# Effectively, the following command is executed
+#
+#  $ cat ${INPUT} | ${DRIVER} ${OPTIONS} ${ENTRY} ${ARGS} > {OUTPUT}
+#
+# NOTE: Programmer must ensure values conform to bash quoting rules
+
+[global]
+INPUT=  
+EXIT_STATUS=0
+
+[default]
+DRIVER=java_subroutine
+OPTIONS="-R null" 
+
+[case]
+ENTRY=
+ARGS=
+

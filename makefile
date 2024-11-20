@@ -1,0 +1,261 @@
+# Makefile for COMP122 Programming Assignments
+#   Allows students:
+#     - to test their code
+#     - to validate the structure of their submission
+#     - to confirm their submission
+#     - to understand how the Prof will grade their assignments
+
+# Typically, there are three parts to every assignment.
+#   Each part of the assignment must be associated with a single branch
+#   For each part you want graded, a global tag MUST be associated a specific commit
+
+# Minimum Requirements for Grading (per part)
+#   1. A tracking branch must be established for said part
+#   1. A minimal number of commits have been made to this branch
+#   1. The branch must be merged with main when complete
+#   1. A tag has been associated with this merge point
+#   1. This tag has been been pushed to the origin
+#   1. The commit date of the global tag must be on or BEFORE the DUE_DATE
+
+# Associated Workflow
+#    1. Create tracking branch
+#       `git branch -c ${BRANCH}`
+#       `git --set-upstream-to=origin ${BRANCH}
+#    1. Development
+#       `git switch ${BRANCH}`
+#       LOOP:  edit, test, commit
+#    1. Done:
+#       `git switch main`
+#       `git merge $BRANCH`
+#       `git tag ${BRANCH}_submitted
+#    1. Submit
+#       `git push`
+#       `git push origin ${BRANCH}`
+#       `git push origin ${BRANCH}_submitted`
+
+
+BRANCHES   ?= java java_tac mips
+BRANCH     ?= main
+MIN_COMMITS = 4
+
+#########################################################################################----
+# Variable Definitions associated with SUBMISSION
+
+SUBMISSION=                      # Include for completeness
+SUBMISSION_TAG=${BRANCH}_submitted
+
+BRANCH_START=$(shell bin/git_branch_starting_point origin/${BRANCH})
+NUM_COMMITS=$(shell git rev-list --count origin/${BRANCH} ^${BRANCH_START})
+
+# Test the above
+HAS_TAG=git show-ref --quiet --tags 
+DUE_DATE ?= $(shell cat DUE_DATE)
+
+
+#########################################################################################
+# Variable Definitions associated with Makefile processing
+SHELL=/bin/bash
+TO_GRADE ?= grade_all
+MAKEFILE ?= makefile
+
+
+#########################################################################################----
+# Make Targets explained
+# 
+# all: (the first target)
+#   - the standard default target
+#   - provides a menu to inform the student on top-level targets
+#
+# test_${BRANCH}:
+#   - uses the simple testing harness (sth) to test the code within a directory
+#   - it presumes the current work directory is correct
+#   - does NOT require the code to be pushed to the remote
+#   - does NOT perform any git operations
+#
+# validate:
+# validate_${BRANCH}:
+#   - checks the administrative requirements of the assignment
+#   - used by the github to run a validation check of a student submission
+#   - invoked by github via `make -k validate`
+#
+# confirm:
+# confirm_${BRANCH}
+#   - validates the administrative requirements are meet
+#   - test the code as it appears in the remote, i.e., submitted code
+#
+# validate_*:
+#   - a series of individual tests that validate one administrative requirement
+#
+# clean:
+#   - standard rule to do cleanup work
+
+all: 
+	@echo 
+	@echo "To test your java or mips code"
+	@echo "  \"make test\" to test your code: java, java_tac, and mips"
+	@echo "        \"make test_java\" to test your current java version"
+	@echo "        \"make test_java_tac\" to test your current mips version"
+	@echo "        \"make test_mips\" to test your current mips version"
+	@echo
+	@echo "To validate the structure of your submission"
+	@echo "  \"make validate\" to validate your final submission"
+	@echo "        \"make validate_java\" to validate just your java part"
+	@echo "        \"make validate_java_tac\" to validate just your java_tac part"
+	@echo "        \"make validate_mips\" to validate just your mips part"
+	@echo 
+	@echo "To confirm your assignment as been correctly submitted"
+	@echo "  \"make confirm\" to confirm your final submission"
+	@echo "        \"make confirm_java\" to conform just your java part"
+	@echo "        \"make confirm_java_tac\" to conform just your java_tac part"
+	@echo "        \"make confirme_mips\" to confirm just your mips part"
+	@echo 
+
+
+############################################################################
+first_test: first_test_java first_test_java_tac first_test_mips
+
+first_test_java:
+	@echo === Testing java code     ===
+	(cd java     ; STH_DRIVER=java_subroutine sth_validate $$(echo ../test_cases/00_*)  )
+	@echo
+
+first_test_java_tac:
+	@echo === Testing java_tac code ===
+	( cd java_tac ; STH_DRIVER=java_subroutine sth_validate $$(echo ../test_cases/00_*)  )
+	@echo
+first_test_mips:
+	@echo === Testing mips code     ===
+	( cd mips     ; STH_DRIVER=mips_subroutine sth_validate $$(echo ../test_cases/00_*) )
+	@echo
+
+
+############################################################################
+test: test_java test_java_tac test_mips
+
+test_java:
+	@echo === Testing java code     ===
+	( cd java     ; STH_DRIVER=java_subroutine sth_validate ../test_cases/  )
+	@echo
+
+test_java_tac:
+	@echo === Testing java_tac code ===
+	( cd java_tac ; STH_DRIVER=java_subroutine sth_validate ../test_cases/  )
+	@echo
+test_mips:
+	@echo === Testing mips code     ===
+	( cd mips     ; STH_DRIVER=mips_subroutine sth_validate ../test_cases/  )
+	@echo
+
+
+############################################################################
+validate:
+	@for x in ${BRANCHES} ; do  \
+	  BRANCH=$${x} make -f ${MAKEFILE} validate_branch ; \
+	done 2>/dev/null
+
+validate_java:
+	@BRANCH=java     make -f ${MAKEFILE} validate_branch 2>/dev/null
+validate_java_tac:
+	@BRANCH=java_tac make -f ${MAKEFILE} validate_branch 2>/dev/null
+validate_mips:
+	@BRANCH=mips     make -f ${MAKEFILE} validate_branch 2>/dev/null
+
+
+############################################################################
+confirm:
+	@for p in ${BRANCHES} ; do  \
+	  BRANCH=$${p} make -f ${MAKEFILE} confirm_branch ; \
+	done 2>/dev/null
+
+confirm_java:
+	@BRANCH=java     make -f ${MAKEFILE} confirm_branch 2>/dev/null
+confirm_java_tac:
+	@BRANCH=java_tac make -f ${MAKEFILE} confirm_branch 2>/dev/null
+confirm_mips:
+	@BRANCH=mips     make -f ${MAKEFILE} confirm_branch 2>/dev/null
+
+
+confirm_branch: validate_branch
+	git switch --detach ${SUBMISSION_TAG}
+	make -f ${MAKEFILE} test_${BRANCH} 
+	git switch main
+
+
+############################################################################
+validate_branch: validate_branch_exists validate_merged validate_ontime
+
+
+validate_branch_exists:
+	@ [[ "$$(git branch --remote --list --format="%(refname:short)" origin/${BRANCH})" == "origin/${BRANCH}" ]] || \
+	  { echo "Remote Branch \"${BRANCH}\" does not exist" ; false ; }
+
+validate_merged:
+	@ [[ "$$(git branch --remote --format="%(refname:short)" --merged origin/main origin/${BRANCH})" == "origin/${BRANCH}" ]] || \
+	  { echo "Remote Branch \"${BRANCH}\" has not been merged to main" ; false ; }
+
+validate_number_commits: 
+	@ [[ $(NUM_COMMITS) -ge $(MIN_COMMITS) ]]  ||  \
+	  { echo "Remote Branch Commits on \"${BRANCH}\":  $(NUM_COMMITS) < $(MIN_COMMITS) required commits" ; false ; }
+
+validate_ontime: validate_tag validate_matched_tags DUE_DATE
+	@ bin/git_tagged_ontime "${DUE_DATE}" ${SUBMISSION_TAG} || \
+	  { echo "Due date violation: Due Date: ${DUE_DATE} ; tag=${SUBMISSION_TAG}";  false ; }
+
+validate_tag:
+	@ ${HAS_TAG} ${SUBMISSION_TAG} || \
+	  { echo "Missing tag: \"${SUBMISSION_TAG}\"" ; false ; }
+
+validate_matched_tags: 
+	@ bin/git_matched_tags ${SUBMISSION_TAG} || \
+	  { echo "Remote/Local Tags Mismatch:  ${SUBMISSION_TAG} (hint 'git push origin ${SUBMISSION_TAG}')" ; false ; }
+
+
+.PHONEY: clean
+clean: 
+	${RM} */*.class
+	${RM} -r */.java_subroutine
+	${RM} -r */.mips_subroutine
+
+
+#
+#  The following section is the code the prof will use to determine
+#    - what he will and what he will not grade.
+#  This section is left here for transparency.
+#  His criteria for grading for a particular assignment may change!
+#
+#  At very most, he will grade 
+#    - only material that is submitted by the due_date
+#      * unless prior arrangements have been made
+#    - a task based upon the point in time in which you asserted is done
+#      * by virtue of appropriate tagging
+
+pregrade: validate
+	@mkdir -p grading 
+	@cp -r test_cases makefile grading
+	@for p in ${BRANCHES} ; do  \
+	  BRANCH=$${p} make -f ${MAKEFILE} copy_code >/dev/null 2>&1; \
+	done
+
+grade: 
+	@# Presume that pregrading has been done, which means
+	@# submitted tag is present and branch merged
+	@subl -n grading
+	@subl $$(echo grading/test_cases/*.sth_case)
+	@(cd grading ; \
+	for p in ${BRANCHES} ; do  \
+	  [[ "$$(echo $${p}/*.[js])" != "$${p}/*.[js]" ]] \
+	    && subl $${p}/*.[js] ; \
+	  make -f ${MAKEFILE} first_test_$${p} ; \
+	  if [[ $${?} -ne 0 ]] ; then continue; fi ; \
+	  make -f ${MAKEFILE} test_$${p} > /dev/null  2>&1 ; \
+	  echo ; \
+	  true ; \
+	done )
+	@echo
+
+
+copy_code:
+	@git switch --detach ${BRANCH}_submitted   #-- issue is that it might not be before due_date
+	@cp -R ${BRANCH} grading
+	@git switch main
+

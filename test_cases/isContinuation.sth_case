@@ -1,0 +1,21 @@
+[default]
+DRIVER=java_subroutine
+OPTIONS="-L ."
+ENTRY=isContinuation
+
+[case]
+ARGS="0"
+EXIT_STATUS=1
+
+[case]
+ARGS=0x80 
+EXIT_STATUS=0 
+
+[case]
+ARGS=0xF7 
+EXIT_STATUS=1
+
+[case]
+ARGS=
+EXIT_STATUS=
+

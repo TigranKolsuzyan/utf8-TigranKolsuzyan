@@ -1,0 +1,18 @@
+[default]
+DRIVER=java_subroutine
+ENTRY=decode
+OPTIONS="-L ."
+
+[case]
+INPUT="../test_cases/list_1.txt"
+OUTPUT="2727"
+EXIT_STATUS=1
+
+[case]
+INPUT="../test_cases/list_2.txt"
+OUTPUT=../test_cases/list_2.output"
+EXIT_STATUS=4
+
+[case]
+INPUT="../test_cases/list_3.txt"
+EXIT_STATUS=0
