@@ -27,7 +27,7 @@ a7
 The execution of this program is as follows:
 
   ```bash
-  $ cat input_1.txt | java_subroutine -R null -L java/utf.j decode
+  $ cat input_1.txt | java_subroutine -R null -L java/utf8.j decode
   2727
   $ echo $?
   1
@@ -111,7 +111,6 @@ Your program will consist of the following java methods:
 
       - see Slide 21 from introduction-to-encodings.pdf
 
-
    1. public static int isContinuation(int v);
       - example usage:  value = isContinuation(v);
       - the implement of this method is as follows:
@@ -140,6 +139,7 @@ Consider defining the following methods.  With these methods, you can more easil
   public static int eliminate_bits_2(int value);
   public static int eliminate_bits_3(int value);
   public static int eliminate_bits_4(int value);
+  public static int eliminate_bits_cont(int value);
   ```
 
 Each of these methods should, effectively, contain only one line of code.  After they work correctly, you might want copy the relevant line/s of code into the body of your `encode` method.
