@@ -18,6 +18,30 @@
 .end_macro
 
 
+.macro call(%sub, %arg0, %arg1, %arg2)
+  save_state()
+  push $a0 $a1 $a2
+  move $a0, %arg0
+  move $a1, %arg1
+  move $a2, %arg2
+  jal %sub
+  pop $a0 $a1 $a2
+  restore_state()
+.end_macro
+
+
+.macro call(%sub, %arg0, %arg1, %arg2, %arg3)
+  save_state()
+  push $a0 $a1 $a2 $a3
+  move $a0, %arg0
+  move $a1, %arg1
+  move $a2, %arg2
+  move $a3, %arg3
+  jal %sub
+  pop $a0 $a1 $a2 $a3
+  restore_state()
+.end_macro
+
 
 .macro save_state()
        push($gp, $sp, $fp, $ra)
