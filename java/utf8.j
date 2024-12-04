@@ -22,6 +22,6 @@ public static int bytes_to_read(int v)
    }
    else if(v >= 0x1000 && v <= 0x10FFFF)
    {
-
+    return 4;
    }
 }  
