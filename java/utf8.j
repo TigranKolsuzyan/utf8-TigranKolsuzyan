@@ -14,29 +14,38 @@ public static int decode()
   int i;
   int b;
   String v_1;
-  mips.read_s();
+  mips.read_x();
   v_1 = mips.retval();
   b = bytes_to_read(v_1);
-  for(i = 0; i < b; i++)
+  while(true)
   {
+    if(b == -1) break;
 
-    if(b == -1)
+    if (b == 1) 
     {
-      break;
+      v_1 = v_1 & 0x7F; // Keep 7 bits for single-byte character
+      return v_1
+    } 
+    else if (b == 2) 
+    {
+      v_1 = v_1 & 0x1F; // Keep 5 bits for two-byte character
+      mips.read_x();
+      v_2 = mips.retval();
+      if(isContinuation(v_2) == -1) break;
+      v_2 = v_2 & 0xFF;
+      v_1 = v_1 | v_2;
+    } 
+    else if (b == 3) 
+    {
+      v_1 = v_1 & 0x0F; // Keep 4 bits for three-byte character
+    } 
+    else if (b == 4) 
+    {
+      v_1 = v_1 & 0x07; // Keep 3 bits for four-byte character
     }
 
-    mips.read_s();
-    v_1 = mips.retval();
-    b = bytes_to_read(v_1);
 
-    if(b == 1)
-    {
-      v_1 = v_1 & 0x7F
-    }
-    else if(b == 2)
-    {
-      v_1 = v_1 & 0x7F
-    }
+
 
 
   }
