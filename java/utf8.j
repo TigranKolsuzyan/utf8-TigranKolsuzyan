@@ -18,7 +18,7 @@ public static int decode()
   int v_2;
   int v_3;
   int v_4;
-  int count;
+  int count = 0;
 
   while(true)
   {
