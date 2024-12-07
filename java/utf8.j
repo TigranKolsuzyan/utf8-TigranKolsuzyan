@@ -15,6 +15,9 @@ public static int decode()
   int i;
   int b;
   int v_1;
+  int v_2;
+  int v_3;
+  int v_4;
   int count;
 
   while(true)
