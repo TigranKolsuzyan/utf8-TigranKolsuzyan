@@ -14,35 +14,132 @@ public static int decode()
   int i;
   int b;
   String v_1;
-  mips.read_x();
-  v_1 = mips.retval();
-  b = bytes_to_read(v_1);
+  int count;
+  
   while(true)
   {
+
+    //figuring out how many bytes
+    mips.read_x();
+    v_1 = mips.retval();
+    b = bytes_to_read(v_1);
+
+    //if its done
     if(b == -1) break;
 
+
+    //one byte
     if (b == 1) 
     {
       v_1 = v_1 & 0x7F; // Keep 7 bits for single-byte character
-      return v_1
-    } 
+
+
+      //printing the final decoding
+      mips.print_x(v_1);
+      mips.print_ci('\n');
+      count = count + 1;
+    }
+
+
+
+
+
+    //two byte 
     else if (b == 2) 
     {
       v_1 = v_1 & 0x1F; // Keep 5 bits for two-byte character
+
+
+      //reading for v_2
       mips.read_x();
       v_2 = mips.retval();
       if(isContinuation(v_2) == -1) break;
-      v_2 = v_2 & 0xFF;
+      v_2 = v_2 & 0x2F;
+
+      //shifting in the mantissa
+      v_1 = v_1 << 6;
+      v_2 = v_2 << 0;
+
+      //printing the final decoding
       v_1 = v_1 | v_2;
+      mips.print_x(v_1);
+      mips.print_ci('\n');
+      count = count + 1;
     } 
+
+
+
+    //three bytes
     else if (b == 3) 
     {
       v_1 = v_1 & 0x0F; // Keep 4 bits for three-byte character
-    } 
+
+
+      //reading for v_2
+      mips.read_x();
+      String v_2 = mips.retval();
+      if(isContinuation(v_2) == -1) break;
+      v_2 = v_2 &  0x2F;
+
+      //reading for v_3
+      mips.read_x();
+      String v_3 = mips.retval();
+      if(isContinuation(v_3) == -1) break;
+      v_3 = v_3 & 0x2F;
+
+
+      //shifting in the mantissa
+      v_1 = v_1 << 12;
+      v_2 = v_2 << 6;
+      v_3 = v_3 << 0;
+
+      //printing the final decoding
+      v_1 = v_1 | v_2 | v_3;
+      mips.print_x(v_1);
+      mips.print_ci('\n');
+      count = count + 1;
+    }
+
+
+
+
+    //four bytes 
     else if (b == 4) 
     {
       v_1 = v_1 & 0x07; // Keep 3 bits for four-byte character
+
+      //reading for v_2
+      mips.read_x();
+      String v_2 = mips.retval();
+      if(isContinuation(v_2) == -1) break;
+      v_2 = v_2 &  0x2F;
+
+      //reading for v_3
+      mips.read_x();
+      String v_3 = mips.retval();
+      if(isContinuation(v_3) == -1) break;
+      v_3 = v_3 & 0x2F;
+
+      //reading for v_4
+      mips.read_x();
+      String v_4 = mips.retval()
+      if(isContinuation(v_3) == -1) break;
+      v_4 = v_4 & 0x2F;
+
+      //shifting in the mantissa
+      v_1 = v_1 << 18;
+      v_2 = v_2 << 12;
+      v_3 = v_3 << 6;
+      v_4 = v_4 << 0;
+
+      //printing the final decoding
+      v_1 = v_1 | v_2 | v_3 | v_4;
+      mips.print_x(v_1);
+      mips.print_ci('\n');
+      count = count + 1;
     }
+
+    return count;
 
 
 
