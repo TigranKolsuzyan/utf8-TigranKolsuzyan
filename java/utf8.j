@@ -14,9 +14,9 @@ public static int decode()
 
   int i;
   int b;
-  String v_1;
+  int v_1;
   int count;
-  
+
   while(true)
   {
 
@@ -78,13 +78,13 @@ public static int decode()
 
       //reading for v_2
       mips.read_x();
-      String v_2 = mips.retval();
+      int v_2 = mips.retval();
       if(isContinuation(v_2) == -1) break;
       v_2 = v_2 &  0x2F;
 
       //reading for v_3
       mips.read_x();
-      String v_3 = mips.retval();
+      int v_3 = mips.retval();
       if(isContinuation(v_3) == -1) break;
       v_3 = v_3 & 0x2F;
 
@@ -111,19 +111,19 @@ public static int decode()
 
       //reading for v_2
       mips.read_x();
-      String v_2 = mips.retval();
+      int v_2 = mips.retval();
       if(isContinuation(v_2) == -1) break;
       v_2 = v_2 &  0x2F;
 
       //reading for v_3
       mips.read_x();
-      String v_3 = mips.retval();
+      int v_3 = mips.retval();
       if(isContinuation(v_3) == -1) break;
       v_3 = v_3 & 0x2F;
 
       //reading for v_4
       mips.read_x();
-      String v_4 = mips.retval()
+      int v_4 = mips.retval();
       if(isContinuation(v_3) == -1) break;
       v_4 = v_4 & 0x2F;
 
