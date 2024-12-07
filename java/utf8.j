@@ -142,15 +142,8 @@ public static int decode()
       mips.print_ci('\n');
       count = count + 1;
     }
-
-    return count;
-
-
-
-
-
   }
-
+  return count;
 }
 
 
