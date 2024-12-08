@@ -57,7 +57,7 @@ public static int decode()
       //reading for v_2
       mips.read_x();
       v_2 = mips.retval();
-      if(isContinuation(v_2) == -1) break;
+      if(isContinuation(v_2) == 1) break;
       v_2 = v_2 & 0x2F;
 
       //shifting in the mantissa
@@ -82,13 +82,13 @@ public static int decode()
       //reading for v_2
       mips.read_x();
       v_2 = mips.retval();
-      if(isContinuation(v_2) == -1) break;
+      if(isContinuation(v_2) == 1) break;
       v_2 = v_2 &  0x2F;
 
       //reading for v_3
       mips.read_x();
       v_3 = mips.retval();
-      if(isContinuation(v_3) == -1) break;
+      if(isContinuation(v_3) == 1) break;
       v_3 = v_3 & 0x2F;
 
 
@@ -115,19 +115,19 @@ public static int decode()
       //reading for v_2
       mips.read_x();
       v_2 = mips.retval();
-      if(isContinuation(v_2) == -1) break;
+      if(isContinuation(v_2) == 1) break;
       v_2 = v_2 &  0x2F;
 
       //reading for v_3
       mips.read_x();
       v_3 = mips.retval();
-      if(isContinuation(v_3) == -1) break;
+      if(isContinuation(v_3) == 1) break;
       v_3 = v_3 & 0x2F;
 
       //reading for v_4
       mips.read_x();
       v_4 = mips.retval();
-      if(isContinuation(v_3) == -1) break;
+      if(isContinuation(v_3) == 1) break;
       v_4 = v_4 & 0x2F;
 
       //shifting in the mantissa
@@ -163,7 +163,7 @@ public static int isContinuation(int value) {
     if (value == 0x80) {   // 0x80 == 0b1000 0000
      retval = 0;
     }
-    return retval;
+    return retval * -1;
 }
 
 
