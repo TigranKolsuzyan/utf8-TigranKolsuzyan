@@ -15,7 +15,8 @@ EXIT_STATUS=4
 
 [case]
 INPUT="../test_cases/list_3.txt"
-EXIT_STATUS=0
+OUTPUT="1"
+EXIT_STATUS=1
 
 [case]
 INPUT="../test_cases/list_4.txt"

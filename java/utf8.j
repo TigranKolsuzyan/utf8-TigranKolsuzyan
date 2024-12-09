@@ -4,12 +4,12 @@ public static int decode()
    // - let b = bytes_to_read (v_1)
    // - if b == -1, break from LOOP
    // - eliminate the framing bits from v_1
-   // - read v_1 hexadecimal values, let v_2, v_3, v_4 be those values
-   // - validate each of the values are continuation bytes
+   // - read v_1 hexadecimal vs, let v_2, v_3, v_4 be those vs
+   // - validate each of the vs are continuation bytes
    //   * if any are not continuation bytes then break from LOOP
    // - eliminate the framing bytes from v2, etc
-   // - reassemble the values v_1, ... v_4, as appropriate, into v
-   // - print v as a hexadecimal value
+   // - reassemble the vs v_1, ... v_4, as appropriate, into v
+   // - print v as a hexadecimal v
 
 
   int i;
@@ -58,7 +58,7 @@ public static int decode()
       mips.read_x();
       v_2 = mips.retval();
       if(isContinuation(v_2) == 1) break;
-      v_2 = v_2 & 0x2F;
+      v_2 = v_2 & 0x3F;
 
       //shifting in the mantissa
       v_1 = v_1 << 6;
@@ -83,13 +83,13 @@ public static int decode()
       mips.read_x();
       v_2 = mips.retval();
       if(isContinuation(v_2) == 1) break;
-      v_2 = v_2 &  0x2F;
+      v_2 = v_2 &  0x3F;
 
       //reading for v_3
       mips.read_x();
       v_3 = mips.retval();
       if(isContinuation(v_3) == 1) break;
-      v_3 = v_3 & 0x2F;
+      v_3 = v_3 & 0x3F;
 
 
       //shifting in the mantissa
@@ -116,19 +116,19 @@ public static int decode()
       mips.read_x();
       v_2 = mips.retval();
       if(isContinuation(v_2) == 1) break;
-      v_2 = v_2 &  0x2F;
+      v_2 = v_2 &  0x3F;
 
       //reading for v_3
       mips.read_x();
       v_3 = mips.retval();
       if(isContinuation(v_3) == 1) break;
-      v_3 = v_3 & 0x2F;
+      v_3 = v_3 & 0x3F;
 
       //reading for v_4
       mips.read_x();
       v_4 = mips.retval();
       if(isContinuation(v_3) == -1) break;
-      v_4 = v_4 & 0x2F;
+      v_4 = v_4 & 0x3F;
 
       //shifting in the mantissa
       v_1 = v_1 << 18;
@@ -148,19 +148,19 @@ public static int decode()
 
 
 
-public static int isContinuation(int value) {
-    // format of value: | ff dd dddd |
+public static int isContinuation(int v) {
+    // format of v: | ff dd dddd |
     //   where  'f' denotes a framing bit
     //   where  'd' denotes a data bit
 
     int retval;
  
     retval = -1;
-    // eliminate the data bits from value
-    value = value & 0xC0;  // 0xC0 == 0b1100 0000
+    // eliminate the data bits from v
+    v = v & 0xC0;  // 0xC0 == 0b1100 0000
 
     // ensure the frame bits are "10"
-    if (value == 0x80) {   // 0x80 == 0b1000 0000
+    if (v == 0x80) {   // 0x80 == 0b1000 0000
      retval = 0;
     }
     return retval * -1;
@@ -172,26 +172,26 @@ public static int isContinuation(int value) {
 
 
 
-public static int bytes_to_read(int v)
+public static int bytes_to_read(int v) 
 {
-   if(v >= 0x0000 && v <= 0x7F)
-   {
-    return 1;
-   }
-   else if(v >= 0x0080 && v <= 0x7FF)
-   {
-    return 2;
-   }
-   else if(v >= 0x0800 && v <= 0xFFFF)
-   {
-    return 3;
-   }
-   else if(v >= 0x1000 && v <= 0x10FFFF)
-   {
-    return 4;
-   }
-   else
-   {
-    return -1;
-   }
+    if (0x00 <= v && v <= 0x7F) 
+    {
+        return 1; // Single-byte character
+    } 
+    else if (0xC0 <= v && v <= 0xDF) 
+    {
+        return 2; // Two-byte sequence
+    } 
+    else if (0xE0 <= v && v <= 0xEF) 
+    {
+        return 3; // Three-byte sequence
+    } 
+    else if (0xF0 <= v && v <= 0xF7) 
+    {
+        return 4; // Four-byte sequence
+    } 
+    else 
+    { 
+        return -1; // Invalid UTF-8 start byte
+    }
 }  
