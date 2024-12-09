@@ -39,8 +39,6 @@ public static int decode()
 
 
       //printing the final decoding
-      mips.print_x(v_1);
-      mips.print_ci('\n');
       count = count + 1;
     }
 
@@ -66,8 +64,6 @@ public static int decode()
 
       //printing the final decoding
       v_1 = v_1 | v_2;
-      mips.print_x(v_1);
-      mips.print_ci('\n');
       count = count + 1;
     } 
 
@@ -99,8 +95,6 @@ public static int decode()
 
       //printing the final decoding
       v_1 = v_1 | v_2 | v_3;
-      mips.print_x(v_1);
-      mips.print_ci('\n');
       count = count + 1;
     }
 
@@ -138,10 +132,11 @@ public static int decode()
 
       //printing the final decoding
       v_1 = v_1 | v_2 | v_3 | v_4;
-      mips.print_x(v_1);
-      mips.print_ci('\n');
       count = count + 1;
     }
+
+    mips.print_x(v_1);
+    mips.print_ci('\n');
   }
   return count;
 }
