@@ -127,7 +127,7 @@ public static int decode()
       //reading for v_4
       mips.read_x();
       v_4 = mips.retval();
-      if(isContinuation(v_3) == 1) break;
+      if(isContinuation(v_3) == -1) break;
       v_4 = v_4 & 0x2F;
 
       //shifting in the mantissa

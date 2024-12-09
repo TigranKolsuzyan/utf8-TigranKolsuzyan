@@ -5,20 +5,25 @@ ENTRY=bytes_to_read
 
 [case]
 ARGS="0"
+OUTPUT=1
 EXIT_STATUS=1
 
 [case]
-ARGS="0920" 
+ARGS="0x0920" 
+OUTPUT=3
 EXIT_STATUS=3 
 
 [case]
-ARGS="0042"  
+ARGS="0x0042" 
+OUTPUT=1 
 EXIT_STATUS=1
 
 [case]
-ARGS="00C2" 
+ARGS="0x00C2"
+OUTPUT=2 
 EXIT_STATUS=2
 
 [case]
-ARGS="5555"  
+ARGS="0x5555"
+OUTPUT=3  
 EXIT_STATUS=3
