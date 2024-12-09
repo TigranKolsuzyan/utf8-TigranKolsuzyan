@@ -5,37 +5,37 @@ OPTIONS="-L ."
 
 [case]
 INPUT="../test_cases/list_1.txt"
-OUTPUT="2727"
+OUTPUT="0x00002727"
 EXIT_STATUS=1
 
 [case]
 INPUT="../test_cases/list_2.txt"
 OUTPUT=../test_cases/list_2.output"
-EXIT_STATUS=4
+EXIT_STATUS=3
 
 [case]
 INPUT="../test_cases/list_3.txt"
-OUTPUT="1"
+OUTPUT="0x00000001"
 EXIT_STATUS=1
 
 [case]
 INPUT="../test_cases/list_4.txt"
-OUTPUT="24"
+OUTPUT="0x00000024"
 EXIT_STATUS=1
 
 [case]
 INPUT="../test_cases/list_5.txt"
-OUTPUT="E0a4a0"
+OUTPUT="0x00000920"
 EXIT_STATUS=1
 
 [case]
 INPUT="../test_cases/list_6.txt"
-OUTPUT="42"
+OUTPUT="0x00000042"
 EXIT_STATUS=1
 
 [case]
 INPUT="../test_cases/list_7.txt"
-OUTPUT="E59595"
+OUTPUT="0x00005555"
 EXIT_STATUS=1
 
 
