@@ -1,7 +1,7 @@
 [default]
 DRIVER=java_subroutine
 ENTRY=decode
-OPTIONS="-L ."
+OPTIONS="-R null -L ."
 
 [case]
 INPUT="../test_cases/list_1.txt"
