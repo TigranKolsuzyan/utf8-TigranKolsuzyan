@@ -145,7 +145,7 @@ outOfIfs:                                             ;
 
                                                       mips.print_x(v_1);
                                                       mips.print_ci('\n');
-                                                      continue whileLoop;
+                                                      continue;
                                                     }
 outOfLoop:                                          ;                                                     
                                                     return count;
@@ -169,7 +169,7 @@ isCont:                                             ;
 ensureFrameBit:                                      ;                                                        
                                                      retval = 0;
                                                     }
-                                                    retval = retval * -1
+                                                    retval = retval * -1;
                                                     return retval;
 }
 
@@ -191,7 +191,9 @@ oneBytes:                                                 ;
                                                         }                                                        
                                                       
                                                     } 
-                                                    else if (0xC0 <= v) 
+
+                                                    
+                                                    if (0xC0 <= v) 
                                                     {
 twoBytes:                                               ;
                                                         if(v <= 0xDF)
@@ -200,7 +202,9 @@ twoBytes:                                                 ;
                                                           return 2; // Two-byte sequence
                                                         }                                                        
                                                     } 
-                                                    else if (0xE0 <= v) 
+
+
+                                                    if (0xE0 <= v) 
                                                     {
 threeBytes:                                             ;
                                                         if(v <= 0xEF)
@@ -208,19 +212,19 @@ threeBytes:                                             ;
 threeBytes:                                               ;                                                          
                                                           return 3; // Three-byte sequence
                                                         }                                                            
-                                                    } 
-                                                    else if (0xF0 <= v && v <= 0xF7) 
+                                                    }
+
+
+                                                    if (0xF0 <= v) 
                                                     {
 fourBytes:                                              ;
-                                                        if(v <= 0xEF)
+                                                        if(v <= 0xF7)
                                                         {
 fourBytes:                                                ;                                                          
                                                           return 4; // Four-byte sequence
                                                         }    
                                                     } 
-                                                    else 
-                                                    {
-invalidBytes:                                           ;                                                     
-                                                        return -1; // Invalid UTF-8 start byte
-                                                    }
+                                                     
+invalidBytes:                                       ;                                                     
+                                                    return -1; // Invalid UTF-8 start byte
 }  
