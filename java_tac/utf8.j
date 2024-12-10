@@ -10,7 +10,7 @@ public static int decode()
                                                     // - eliminate the framing bytes from v2, etc
                                                     // - reassemble the vs v_1, ... v_4, as appropriate, into v
                                                     // - print v as a hexadecimal v
-
+decode:                                             ;
 
                                                     int i;
                                                     int b;
@@ -21,7 +21,7 @@ public static int decode()
                                                     int count;
 
                                                     count = 0;
-
+whileLoop:                                          ;
                                                     while(true)
                                                     {
                                                     
@@ -37,6 +37,7 @@ public static int decode()
                                                       //one byte
                                                       if (b == 1) 
                                                       {
+oneByte:                                                ;                                                    
                                                         v_1 = v_1 & 0x7F; // Keep 7 bits for single-byte character
 
 
@@ -51,6 +52,7 @@ public static int decode()
                                                       //two byte 
                                                       else if (b == 2) 
                                                       {
+twoByte:                                                ;                                                         
                                                         v_1 = v_1 & 0x1F; // Keep 5 bits for two-byte character
                                                     
 
@@ -74,6 +76,7 @@ public static int decode()
                                                       //three bytes
                                                       else if (b == 3) 
                                                       {
+threeByte:                                              ;                                                         
                                                         v_1 = v_1 & 0x0F; // Keep 4 bits for three-byte character
                                                     
 
@@ -106,6 +109,7 @@ public static int decode()
                                                       //four bytes 
                                                       else if (b == 4) 
                                                       {
+fourByte:                                               ;                                                         
                                                         v_1 = v_1 & 0x07; // Keep 3 bits for four-byte character
 
                                                         //reading for v_2
@@ -137,9 +141,12 @@ public static int decode()
                                                         count = count + 1;
                                                       }
 
+outOfIfs:                                             ;                                                      
+
                                                       mips.print_x(v_1);
                                                       mips.print_ci('\n');
                                                     }
+outOfLoop:                                          ;                                                     
                                                     return count;
 }
 
@@ -149,7 +156,7 @@ public static int isContinuation(int v) {
                                                     // format of v: | ff dd dddd |
                                                     //   where  'f' denotes a framing bit
                                                     //   where  'd' denotes a data bit
-
+isCont:                                             ;
                                                     int retval;
  
                                                     retval = -1;
@@ -158,6 +165,7 @@ public static int isContinuation(int v) {
 
                                                     // ensure the frame bits are "10"
                                                     if (v == 0x80) {   // 0x80 == 0b1000 0000
+ensureFrameBit:                                      ;                                                        
                                                      retval = 0;
                                                     }
                                                     return retval * -1;
@@ -173,22 +181,27 @@ public static int bytes_to_read(int v)
 {
                                                     if (0x00 <= v && v <= 0x7F) 
                                                     {
+oneBytes:                                               ;                                                        
                                                         return 1; // Single-byte character
                                                     } 
                                                     else if (0xC0 <= v && v <= 0xDF) 
                                                     {
+twoBytes:                                               ;                                                        
                                                         return 2; // Two-byte sequence
                                                     } 
                                                     else if (0xE0 <= v && v <= 0xEF) 
                                                     {
+threeBytes:                                             ;                                                        
                                                         return 3; // Three-byte sequence
                                                     } 
                                                     else if (0xF0 <= v && v <= 0xF7) 
                                                     {
+fourBytes:                                              ;                                                        
                                                         return 4; // Four-byte sequence
                                                     } 
                                                     else 
-                                                    { 
+                                                    {
+invalidBytes:                                           ;                                                     
                                                         return -1; // Invalid UTF-8 start byte
                                                     }
 }  
