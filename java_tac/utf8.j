@@ -19,6 +19,7 @@ decode:                                             ;
                                                     int v_3;
                                                     int v_4;
                                                     int count;
+                                                    int isCont;
 
                                                     count = 0;
 whileLoop:                                          ;
@@ -59,7 +60,8 @@ twoByte:                                                ;
                                                         //reading for v_2
                                                         mips.read_x();
                                                         v_2 = mips.retval();
-                                                        if(isContinuation(v_2) == 1) break;
+                                                        isCont = isContinuation(v_2);
+                                                        if(isCont == 1) break;
                                                         v_2 = v_2 & 0x3F;
                                                     
                                                         //shifting in the mantissa
@@ -83,13 +85,15 @@ threeByte:                                              ;
                                                         //reading for v_2
                                                         mips.read_x();
                                                         v_2 = mips.retval();
-                                                        if(isContinuation(v_2) == 1) break;
+                                                        isCont = isContinuation(v_2);
+                                                        if(isCont == 1) break;
                                                         v_2 = v_2 &  0x3F;
 
                                                         //reading for v_3
                                                         mips.read_x();
                                                         v_3 = mips.retval();
-                                                        if(isContinuation(v_3) == 1) break;
+                                                        isCont = isContinuation(v_3);
+                                                        if(isCont == 1) break;
                                                         v_3 = v_3 & 0x3F;
 
 
@@ -115,19 +119,22 @@ fourByte:                                               ;
                                                         //reading for v_2
                                                         mips.read_x();
                                                         v_2 = mips.retval();
-                                                        if(isContinuation(v_2) == 1) break;
+                                                        isCont = isContinuation(v_2);
+                                                        if(isCont == 1) break;
                                                         v_2 = v_2 &  0x3F;
 
                                                         //reading for v_3
                                                         mips.read_x();
                                                         v_3 = mips.retval();
-                                                        if(isContinuation(v_3) == 1) break;
+                                                        isCont = isContinuation(v_3);
+                                                        if(isCont == 1) break;
                                                         v_3 = v_3 & 0x3F;
 
                                                         //reading for v_4
                                                         mips.read_x();
                                                         v_4 = mips.retval();
-                                                        if(isContinuation(v_3) == -1) break;
+                                                        isCont = isContinuation(v_4);
+                                                        if(isCont == -1) break;
                                                         v_4 = v_4 & 0x3F;
 
                                                         //shifting in the mantissa
