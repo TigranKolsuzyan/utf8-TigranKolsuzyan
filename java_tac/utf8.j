@@ -145,6 +145,7 @@ outOfIfs:                                             ;
 
                                                       mips.print_x(v_1);
                                                       mips.print_ci('\n');
+                                                      continue whileLoop;
                                                     }
 outOfLoop:                                          ;                                                     
                                                     return count;
