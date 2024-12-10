@@ -24,36 +24,45 @@
                                                     #// - reassemble the vs v_1, ... v_4, as appropriate, into v
                                                     #// - print v as a hexadecimal v
 decode:                                             #;
+                    # $t0 = int i;
+                    # $t1 = int b;
+                    # $t2 = int v_1;
+                    # $t3 = int v_2;
+                    # $t4 = int v_3;
+                    # $t5 = int v_4;
+                    # $t6 = int count;
 
-                                                    #int i;
-                                                    #int b;
-                                                    #int v_1;
-                                                    #int v_2;
-                                                    #int v_3;
-                                                    #int v_4;
-                                                    #int count;
-
-                                                    #count = 0;
+                    li $t0, 1
+                    li $t6, 0                       #count = 0;
 whileLoop:                                          #;
-                                                    #while(true)
+                    bne $t0, 1, outOfLoop           #while(true)
                                                     #{
                                                     
                                                     #  //figuring out how many bytes
-                                                    #  mips.read_x();
-                                                    #  v_1 = mips.retval();
-                                                    #  b = bytes_to_read(v_1);
-                                                    #
+                    read_x()                        #  mips.read_x();
+                    move $t2, $v0                   #  v_1 = mips.retval();
+                    call bytes_to_read $t2          #  b = bytes_to_read(v_1);
+                    move $t1, $v0                   #
                                                     #  //if its done
-                                                    #  if(b == -1) break;
+                    li $t7, -1
+                    beq $t1, -1, outOfLoop          #  if(b == -1) break;
 
 
                                                     #  //one byte
-                                                    #  if (b == 1) 
+                    beq $t1, 1, oneByte             #  if (b == 1)
+
+                    beq $t1, 2, twoByte
+
+                    beq $t1, 3, threeByte
+
+                    beq $t1, 4, fourByte
+
+                    j outOfIfs
                                                     #  {
 oneByte:                                            #    ;                                                    
-                                                    #    v_1 = v_1 & 0x7F; // Keep 7 bits for single-byte character
-
-
+                    andi $t2, $t2, 0x7F             #    v_1 = v_1 & 0x7F; // Keep 7 bits for single-byte character
+                    addi $t6, $t6, 1
+                    j finishedDecoding
                                                     #    //printing the final decoding
                                                     #    count = count + 1;
                                                     #  }
@@ -154,12 +163,18 @@ fourByte:                                           #    ;
                                                     #    count = count + 1;
                                                     #  }
 
-outOfIfs:                                           #  ;                                                      
+finishedDecoding:                                   #  ;                                                      
 
                                                     #  mips.print_x(v_1);
                                                     #  mips.print_ci('\n');
+
+
+outOfIfs:                                           #  ;                                                         
                                                     #  continue;
                                                     #}
+
+
+
 outOfLoop:                                          #;                                                     
                                                     #return count;
                                                     #}
