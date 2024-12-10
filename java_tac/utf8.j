@@ -169,7 +169,8 @@ isCont:                                             ;
 ensureFrameBit:                                      ;                                                        
                                                      retval = 0;
                                                     }
-                                                    return retval * -1;
+                                                    retval = retval * -1
+                                                    return retval;
 }
 
 
