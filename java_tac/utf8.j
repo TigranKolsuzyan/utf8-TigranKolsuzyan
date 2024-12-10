@@ -181,25 +181,42 @@ ensureFrameBit:                                      ;
 
 public static int bytes_to_read(int v) 
 {
-                                                    if (0x00 <= v && v <= 0x7F) 
+                                                    if (0x00 <= v)
                                                     {
-oneBytes:                                               ;                                                        
-                                                        return 1; // Single-byte character
+oneBytes:                                               ;
+                                                        if(v <= 0x7F)
+                                                        {
+oneBytes:                                                 ;                                                          
+                                                          return 1; // Single-byte character
+                                                        }                                                        
+                                                      
                                                     } 
-                                                    else if (0xC0 <= v && v <= 0xDF) 
+                                                    else if (0xC0 <= v) 
                                                     {
-twoBytes:                                               ;                                                        
-                                                        return 2; // Two-byte sequence
+twoBytes:                                               ;
+                                                        if(v <= 0xDF)
+                                                        {
+twoBytes:                                                 ;                                                          
+                                                          return 2; // Two-byte sequence
+                                                        }                                                        
                                                     } 
-                                                    else if (0xE0 <= v && v <= 0xEF) 
+                                                    else if (0xE0 <= v) 
                                                     {
-threeBytes:                                             ;                                                        
-                                                        return 3; // Three-byte sequence
+threeBytes:                                             ;
+                                                        if(v <= 0xEF)
+                                                        {
+threeBytes:                                               ;                                                          
+                                                          return 3; // Three-byte sequence
+                                                        }                                                            
                                                     } 
                                                     else if (0xF0 <= v && v <= 0xF7) 
                                                     {
-fourBytes:                                              ;                                                        
-                                                        return 4; // Four-byte sequence
+fourBytes:                                              ;
+                                                        if(v <= 0xEF)
+                                                        {
+fourBytes:                                                ;                                                          
+                                                          return 4; // Four-byte sequence
+                                                        }    
                                                     } 
                                                     else 
                                                     {
