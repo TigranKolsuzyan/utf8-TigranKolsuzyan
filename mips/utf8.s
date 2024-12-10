@@ -23,7 +23,7 @@
                                                     #// - eliminate the framing bytes from v2, etc
                                                     #// - reassemble the vs v_1, ... v_4, as appropriate, into v
                                                     #// - print v as a hexadecimal v
-decode:                                             #;
+decode:             nop                             #;
                     # $t0 = int i;
                     # $t1 = int b;
                     # $t2 = int v_1;
@@ -31,10 +31,11 @@ decode:                                             #;
                     # $t4 = int v_3;
                     # $t5 = int v_4;
                     # $t6 = int count;
+                    # $t7 = int iscont;
 
                     li $t0, 1
                     li $t6, 0                       #count = 0;
-whileLoop:                                          #;
+whileLoop:          nop                             #;
                     bne $t0, 1, outOfLoop           #while(true)
                                                     #{
                                                     
@@ -59,7 +60,7 @@ whileLoop:                                          #;
 
                     j outOfIfs
                                                     #  {
-oneByte:                                            #    ;                                                    
+oneByte:            nop                             #    ;                                                    
                     andi $t2, $t2, 0x7F             #    v_1 = v_1 & 0x7F; // Keep 7 bits for single-byte character
                     addi $t6, $t6, 1
                     j finishedDecoding
@@ -74,16 +75,16 @@ oneByte:                                            #    ;
                                                     #  //two byte 
                                                     #  else if (b == 2) 
                                                     #  {
-twoByte:                                            #    ;                                                         
-                                                    #    v_1 = v_1 & 0x1F; // Keep 5 bits for two-byte character
+twoByte:            nop                             #    ;                                                         
+                    andi $t2, $t2, 0x1F             #    v_1 = v_1 & 0x1F; // Keep 5 bits for two-byte character
                                                     
 
                                                     #    //reading for v_2
-                                                    #    mips.read_x();
-                                                    #    v_2 = mips.retval();
-                                                    #    if(isContinuation(v_2) == 1) break;
-                                                    #    v_2 = v_2 & 0x3F;
-                                                    
+                    read_x()                        #    mips.read_x();
+                    move $t3, $v0                   #    v_2 = mips.retval();
+                    call isContinuation $t3         #    if(isContinuation(v_2) == 1) break;
+                    move $t7, $v0                   #    v_2 = v_2 & 0x3F;
+                    beq $t7, 1, outOfLoop           
                                                     #    //shifting in the mantissa
                                                     #    v_1 = v_1 << 6;
                                                     #    v_2 = v_2 << 0;
