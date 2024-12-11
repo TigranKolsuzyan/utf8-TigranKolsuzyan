@@ -85,13 +85,13 @@ twoByte:            nop                             #    ;
                     call isContinuation $t3         #    if(isContinuation(v_2) == 1) break;
                     move $t7, $v0                   #    v_2 = v_2 & 0x3F;
                     beq $t7, 1, outOfLoop           
-                                                    #    //shifting in the mantissa
-                                                    #    v_1 = v_1 << 6;
-                                                    #    v_2 = v_2 << 0;
+                    andi $t3, $t3, 0x3F             #    //shifting in the mantissa
+                    sll $t2, $t2, 6                 #    v_1 = v_1 << 6;
+                    sll $t3, $t3, 0                 #    v_2 = v_2 << 0;
 
                                                     #    //printing the final decoding
-                                                    #    v_1 = v_1 | v_2;
-                                                    #    count = count + 1;
+                    or $t2, $t2, $t3                #    v_1 = v_1 | v_2;
+                    addi $t6, $t6, 1                #    count = count + 1;
                                                     #  } 
 
 
