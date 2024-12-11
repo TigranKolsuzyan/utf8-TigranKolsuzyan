@@ -195,7 +195,7 @@ outOfLoop:                                          #;
                                                     #// format of v: | ff dd dddd |
                                                     #//   where  'f' denotes a framing bit
                                                     #//   where  'd' denotes a data bit
-isCont:         nop                                 #;
+isContinuation: nop                                 #;
                 # a0 = v                            #int retval;
                 # v0 = retval                       
 
@@ -206,11 +206,11 @@ isCont:         nop                                 #;
                                                     #// ensure the frame bits are "10"
                                                     #if (v == 0x80) {   // 0x80 == 0b1000 0000
 invalid:        nop                                 # ;                                                        
-                move $v0, 1                         # retval = 0;
+                li $v0, 1                           # retval = 0;
                 jr $ra                              #}
 
 valid:          nop                                       
-                move $v0, 0                         #retval = retval * -1;
+                li $v0, 0                           #retval = retval * -1;
                 jr $ra                              #return retval;
                                                     #}
 
