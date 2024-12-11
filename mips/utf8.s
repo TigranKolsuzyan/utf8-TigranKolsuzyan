@@ -175,19 +175,19 @@ fourByte:           nop                             #    ;
 
 finishedDecoding:                                   #  ;                                                      
 
-                                                    #  mips.print_x(v_1);
-                                                    #  mips.print_ci('\n');
+                print_x($t2)                        #  mips.print_x(v_1);
+                print_ci('\n')                      #  mips.print_ci('\n');
 
 
 outOfIfs:                                           #  ;                                                         
-                                                    #  continue;
+                j whileLoop                         #  continue;
                                                     #}
 
 
 
 outOfLoop:                                          #;                                                     
-                                                    #return count;
-                                                    #}
+                move $v0, $t6                       #return count;
+                jr $ra                              #}
 
                                                 
 
@@ -195,28 +195,31 @@ outOfLoop:                                          #;
                                                     #// format of v: | ff dd dddd |
                                                     #//   where  'f' denotes a framing bit
                                                     #//   where  'd' denotes a data bit
-isCont:                                             #;
-                                                    #int retval;
- 
+isCont:         nop                                 #;
+                # a0 = v                            #int retval;
+                # v0 = retval                       
+
                                                     #retval = -1;
                                                     #// eliminate the data bits from v
-                                                    #v = v & 0xC0;  // 0xC0 == 0b1100 0000
-
+                andi $a0, $a0, 0xC0                 #v = v & 0xC0;  // 0xC0 == 0b1100 0000
+                beq $a0, 0x80, valid
                                                     #// ensure the frame bits are "10"
                                                     #if (v == 0x80) {   // 0x80 == 0b1000 0000
-ensureFrameBit:                                     # ;                                                        
-                                                    # retval = 0;
+invalid:        nop                                 # ;                                                        
+                move $v0, 1                         # retval = 0;
+                jr $ra                              #}
+
+valid:          nop                                       
+                move $v0, 0                         #retval = retval * -1;
+                jr $ra                              #return retval;
                                                     #}
-                                                    #retval = retval * -1;
-                                                    #return retval;
-                                                    #}
 
 
 
 
 
 
-
+bytes_to_read:
                                                     #public static int bytes_to_read(int v) 
                                                     #{
                                                     #if (0x00 <= v)
