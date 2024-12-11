@@ -219,54 +219,62 @@ valid:          nop
 
 
 
-bytes_to_read:
-                                                    #public static int bytes_to_read(int v) 
+bytes_to_read:  nop
+                #a0 = v                             #public static int bytes_to_read(int v) 
                                                     #{
-                                                    #if (0x00 <= v)
-                                                    #{
-oneBytes:                                           #    ;
-                                                    #    if(v <= 0x7F)
+                li $v0, 1                           #if (0x00 <= v)
+                ble $a0, 0x7F, return               #{
+                                                    #    ;
+                li $v0, 2                           
+                bge $a0, 0xC0, checkTwo
+                j invalidByte                       #    if(v <= 0x7F)
                                                     #    {
-oneBytes:                                           #      ;                                                          
-                                                    #      return 1; // Single-byte character
+checkTwo:       nop                                 #      ;                                                          
+                ble $a0, 0xDF, return               #      return 1; // Single-byte character
                                                     #    }                                                        
-                                                      
-                                                    #} 
-
+                li $v0, 3                             
+                bge $a0, 0xE0, checkThree           #} 
+                j invalidByte
                                                     #
                                                     #if (0xC0 <= v) 
                                                     #{
-twoBytes:                                           #    ;
-                                                    #    if(v <= 0xDF)
+checkThree:     nop                                 #    ;
+    
+                ble $a0, 0xEF, return
+
+
+                li $v0, 4
+                bge $a0, 0xF0, checkFour
+                j invalidByte                       #    if(v <= 0xDF)
                                                     #    {
-twoBytes:                                           #      ;                                                          
-                                                    #      return 2; // Two-byte sequence
+checkFour:      nop                                 #      ;                                                          
+                ble $a0, 0xF7, return               #      return 2; // Two-byte sequence
                                                     #    }                                                        
                                                     #} 
 
 
                                                     #if (0xE0 <= v) 
                                                     #{
-threeBytes:                                         #    ;
-                                                    #    if(v <= 0xEF)
-                                                    #    {
-threeBytes:                                         #      ;                                                          
-                                                    #      return 3; // Three-byte sequence
+invalidByte:    nop                                 #    ;
+                li $v0, -1                          #    if(v <= 0xEF)
+                jr $ra                              #    {
+return:         nop                                 #      ;                                                          
+                jr $ra                              #      return 3; // Three-byte sequence
                                                     #    }                                                            
                                                     #}
 
 
                                                     #if (0xF0 <= v) 
                                                     #{
-fourBytes:                                          #    ;
+                                                    #    ;
                                                     #    if(v <= 0xF7)
                                                     #    {
-fourBytes:                                          #      ;                                                          
+                                                    #      ;                                                          
                                                     #      return 4; // Four-byte sequence
                                                     #    }    
                                                     #} 
                                                      
-invalidBytes:                                       #;                                                     
+                                                    #;                                                     
                                                     #return -1; // Invalid UTF-8 start byte
                                                     #}  
                     
