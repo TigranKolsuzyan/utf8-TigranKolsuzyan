@@ -33,19 +33,20 @@ decode:             nop                             #;
                     # $t6 = int count;
                     # $t7 = int iscont;
 
-                    li $t0, 1
+                    
                     li $t6, 0                       #count = 0;
 whileLoop:          nop                             #;
-                    bne $t0, 1, outOfLoop           #while(true)
+                                                    #while(true)
                                                     #{
                                                     
                                                     #  //figuring out how many bytes
                     read_x()                        #  mips.read_x();
-                    move $t2, $v0                   #  v_1 = mips.retval();
+                    move $t2, $v0  
+                    beq $t2, -1, outOfLoop          #  v_1 = mips.retval();
                     call bytes_to_read $t2          #  b = bytes_to_read(v_1);
                     move $t1, $v0                   #
                                                     #  //if its done
-                    li $t7, -1
+                    
                     beq $t1, -1, outOfLoop          #  if(b == -1) break;
 
 
