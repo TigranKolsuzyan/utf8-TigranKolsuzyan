@@ -135,7 +135,7 @@ fourByte:                                               ;
                                                         mips.read_x();
                                                         v_4 = mips.retval();
                                                         isCont = isContinuation(v_4);
-                                                        if(isCont == -1) break;
+                                                        if(isCont == 1) break;
                                                         v_4 = v_4 & 0x3F;
 
                                                         //shifting in the mantissa
