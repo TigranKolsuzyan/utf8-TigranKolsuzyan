@@ -92,7 +92,7 @@ twoByte:            nop                             #    ;
                                                     #    //printing the final decoding
                     or $t2, $t2, $t3                #    v_1 = v_1 | v_2;
                     addi $t6, $t6, 1                #    count = count + 1;
-                                                    #  } 
+                    j finishedDecoding              #  } 
 
 
 
@@ -126,7 +126,7 @@ threeByte:          nop                             #    ;
                     or $t2, $t2, $t3                #    v_1 = v_1 | v_2 | v_3;
                     or $t2, $t2, $t4                #    count = count + 1;
                     addi $t6, $t6, 1                #  }
-
+                    j finishedDecoding
 
 
 
@@ -159,15 +159,19 @@ fourByte:           nop                             #    ;
                     move $t7, $v0                   #    v_4 = v_4 & 0x3F;
                     beq $t7, 1, outOfLoop
                     andi $t5, $t5, 0x3F             #    //shifting in the mantissa
-                                                    #    v_1 = v_1 << 18;
-                                                    #    v_2 = v_2 << 12;
-                                                    #    v_3 = v_3 << 6;
-                                                    #    v_4 = v_4 << 0;
+
+
+                    sll $t2, $t2, 18                #    v_1 = v_1 << 18;
+                    sll $t3, $t3, 12                #    v_2 = v_2 << 12;
+                    sll $t4, $t4, 6                 #    v_3 = v_3 << 6;
+                    sll $t5, $t5, 0                 #    v_4 = v_4 << 0;
 
                                                     #    //printing the final decoding
-                                                    #    v_1 = v_1 | v_2 | v_3 | v_4;
-                                                    #    count = count + 1;
-                                                    #  }
+                    or $t2, $t2, $t3             
+                    or $t2, $t2, $t4
+                    or $t2, $t2, $t5                #    v_1 = v_1 | v_2 | v_3 | v_4;
+                    addi $t6, $t6, 1                #    count = count + 1;
+                    j finishedDecoding              #  }
 
 finishedDecoding:                                   #  ;                                                      
 
