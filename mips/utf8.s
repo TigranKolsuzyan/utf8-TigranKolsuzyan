@@ -99,32 +99,33 @@ twoByte:            nop                             #    ;
                                                     #  //three bytes
                                                     #  else if (b == 3) 
                                                     #  {
-threeByte:                                          #    ;                                                         
-                                                    #    v_1 = v_1 & 0x0F; // Keep 4 bits for three-byte character
+threeByte:          nop                             #    ;                                                         
+                    andi $t2, $t2, 0x0F             #    v_1 = v_1 & 0x0F; // Keep 4 bits for three-byte character
                                                     #
 
                                                     #    //reading for v_2
-                                                    #    mips.read_x();
-                                                    #    v_2 = mips.retval();
-                                                    #    if(isContinuation(v_2) == 1) break;
-                                                    #    v_2 = v_2 &  0x3F;
-
+                    read_x()                        #    mips.read_x();
+                    move $t3, $v0                   #    v_2 = mips.retval();
+                    call isContinuation $t3         #    if(isContinuation(v_2) == 1) break;
+                    move $t7, $v0                   #    v_2 = v_2 & 0x3F;
+                    beq $t7, 1, outOfLoop           
+                    andi $t3, $t3, 0x3F
                                                     #    //reading for v_3
-                                                    #    mips.read_x();
-                                                    #    v_3 = mips.retval();
-                                                    #    if(isContinuation(v_3) == 1) break;
-                                                    #    v_3 = v_3 & 0x3F;
-
-
+                    read_x()                        #    mips.read_x();
+                    move $t4, $v0                   #    v_3 = mips.retval();
+                    call isContinuation $t4         #    if(isContinuation(v_3) == 1) break;
+                    move $t7, $v0                   #    v_3 = v_3 & 0x3F;
+                    beq $t7, 1, outOfLoop
+                    andi $t4, $t4, 0x3F
                                                     #    //shifting in the mantissa
-                                                    #    v_1 = v_1 << 12;
-                                                    #    v_2 = v_2 << 6;
-                                                    #    v_3 = v_3 << 0;
+                    sll $t2, $t2, 12                #    v_1 = v_1 << 12;
+                    sll $t3, $t3, 6                 #    v_2 = v_2 << 6;
+                    sll $t4, $t4, 0                 #    v_3 = v_3 << 0;
 
                                                     #    //printing the final decoding
-                                                    #    v_1 = v_1 | v_2 | v_3;
-                                                    #    count = count + 1;
-                                                    #  }
+                    or $t2, $t2, $t3                #    v_1 = v_1 | v_2 | v_3;
+                    or $t2, $t2, $t4                #    count = count + 1;
+                    addi $t6, $t6, 1                #  }
 
 
 
