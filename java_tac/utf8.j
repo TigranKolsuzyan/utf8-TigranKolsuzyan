@@ -103,7 +103,8 @@ threeByte:                                              ;
                                                         v_3 = v_3 << 0;
 
                                                         //printing the final decoding
-                                                        v_1 = v_1 | v_2 | v_3;
+                                                        v_1 = v_1 | v_2; 
+                                                        v_1 = v_1 | v_3;
                                                         count = count + 1;
                                                       }
 
@@ -144,7 +145,9 @@ fourByte:                                               ;
                                                         v_4 = v_4 << 0;
 
                                                         //printing the final decoding
-                                                        v_1 = v_1 | v_2 | v_3 | v_4;
+                                                        v_1 = v_1 | v_2;
+                                                        v_1 = v_1 | v_3;
+                                                        v_1 = v_1 | v_4;
                                                         count = count + 1;
                                                       }
 
